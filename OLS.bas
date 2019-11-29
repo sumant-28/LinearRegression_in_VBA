@@ -1,5 +1,28 @@
 Attribute VB_Name = "OLS"
+' Defining WorksheetFunctions to decrease obtrusive text
+
+Function MInverse(a As Variant) As Variant
+    MInverse = Application.WorksheetFunction.MInverse(a)
+End Function
+
+Function MMult(a As Variant, b As Variant) As Variant
+    MMult = Application.WorksheetFunction.MMult(a, b)
+End Function
+
+Function Transpose(a As Variant) As Variant
+    Transpose = Application.WorksheetFunction.Transpose(a)
+End Function
+
+' Main OLS function using matrix multiplication
+Function BetaOLS(X As Variant, Y As Variant) As Variant
+    BetaOLS = MMult(Transpose(MInverse(MMult(Transpose(X), X))), MMult(Transpose(X), Y))
+End Function
+
 Sub OLS()
+
+' This Sub calculates the Ordinary Least Squares estimation of coefficients with toy data
+
+' Creating data for the OLS function to calculate coefficients from
 
 Cells(1, 1) = 1
 Cells(2, 1) = 1
@@ -40,10 +63,7 @@ Y = Range("D1:D5")
 Dim X As Variant
 X = Range("A1:C5")
 
-ProjectionMatrix = WorksheetFunction.MInverse(WorksheetFunction.MMult(WorksheetFunction.transpose(X), X))
-XTY = WorksheetFunction.MMult(WorksheetFunction.transpose(X), Y)
-
-Beta = WorksheetFunction.MMult(ProjectionMatrix, XTY)
+Beta = BetaOLS(X, Y)
 
 ' The coefficient on the constant is 2.4
 ' The coefficient on X2 is - 3.2
